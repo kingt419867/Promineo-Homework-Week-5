@@ -1,6 +1,11 @@
-package week5LabsAndHomwork;
+package cardGame;
 
-public class Week5Labs {
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class Week5CardLab {
 
 	// This Lab will give you a basic look at creating an Object Oriented Card Game.  
 	//		The idea here is to prepare you for your Week 6 Unit Final Project.
@@ -38,7 +43,7 @@ public class Week5Labs {
 		//
 		System.out.println("\nQuestion 1: Cards Class");
 		// Add your code here to instantiate a Card
-		Cards card = new Card("Two", "Hearts", 2);
+		Cards card = new Cards("Two", "Hearts", 2);
 		card.describe();
 		
 		// Call the describe method on the newly instantiated card.
@@ -63,10 +68,10 @@ public class Week5Labs {
 		System.out.println("\nQuestion 2: Deck Class");
 	    // Add your code here to instantiate a Deck	
 	    
-	    
+	    Deck deck = new Deck();
 	    // Call the describe method on the newly instantiated deck.
 	    
-	    
+	    deck.describe();
 	    
 	    
 		
@@ -75,11 +80,11 @@ public class Week5Labs {
 		//		Add a shuffle method within the Deck Class
 		System.out.println("\nQuestion 3: Deck shuffle() method");
 		// Test your method here
-		
+		deck.shuffle();
 		
 		
 		// Call the describe method on the newly shuffled deck.
-
+		deck.describe();
 		
 		
 		
@@ -87,7 +92,8 @@ public class Week5Labs {
 		//		Add a draw method within the Deck Class
 		System.out.println("\nQuestion 4: Deck draw() method");
 		// Test your method here
-		
+		Cards drawnCard = deck.draw();
+		drawnCard.describe();
 		
 		
 		
@@ -106,8 +112,20 @@ public class Week5Labs {
 		System.out.println("\nQuestion 5: Create Game");
 		// Call your method here
 
-		
-		
+		Map<String, List<Cards>> gameBoard = new HashMap<>();
+		int numberOfPlayers = 3;
+		gameBoard = createGame(numberOfPlayers);
+		System.out.println("-----------------------");
+		for (int m = 1; m <= numberOfPlayers; m++) {
+			String playerName = "Player " + m;
+			System.out.println(playerName + "\n-----------");
+			List<Cards> playerList = gameBoard.get(playerName);
+			for (Cards hand : playerList) {
+				hand.describe();
+			}
+			System.out.println("-----------------------");
+
+		}
 		
 		
 		
@@ -116,7 +134,32 @@ public class Week5Labs {
 	} 
 	
 	// Method 5:
-	
+	public static Map<String, List<Cards>> createGame (int numOfPlayers) {
+		Map<String, List<Cards>> finalGameBoard = new HashMap<>();
+		Deck deck = new Deck();
+		deck.shuffle();
+		System.out.println("This deck has " + deck.getCards().size() + " cards.");
+		for (int i = 1; i <= numOfPlayers; i++) {
+			List<Cards> playerList = new ArrayList<>();
+			String playerName = "Player " + i;
+			finalGameBoard.put(playerName, playerList);
+		}
+		for (int j = 0; j < 52/numOfPlayers; j++) {
+			for (int k = 1; k <= numOfPlayers; k++) {
+				String playerName = "Player " + k;
+				List<Cards> playerList = finalGameBoard.get(playerName);
+				playerList.add(deck.draw());
+				finalGameBoard.replace(playerName, playerList);
+			}
+		}
+		if (52 % numOfPlayers != 0) {
+			System.out.print("With " + numOfPlayers + " players -- ");
+			System.out.println("Cards left in deck:  " + 52%numOfPlayers);
+		} else {
+			System.out.println("All cards were dealt.");
+		}
+		return finalGameBoard;
+	}
 	
 	
 	
